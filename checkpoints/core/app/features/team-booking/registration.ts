@@ -20,8 +20,13 @@ export const registrationSchema = schema<Registration>((p) => {
   required(p.organizer.name, {message: 'Enter the organizer name.'});
   required(p.organizer.email, {message: 'Enter the organizer email.'});
   email(p.organizer.email, {message: 'Use a valid email address.'});
+  // Array-level rule: validate the team itself, even when there are no people.
   validate(p.attendees, ({value}) => value().length < 1 ? {kind: 'minimum', message: 'Add at least one attendee.'} : undefined);
+  // Apply these field rules to every attendee, including newly added rows.
+  // `person` describes one item's schema paths; it is not an attendee value.
   applyEach(p.attendees, (person) => {
+    // Custom messages belong to the field's errors. Our shared field component
+    // displays them after touch or an attempted submission.
     required(person.name, {message: 'Enter the attendee name.'});
     required(person.email, {message: 'Enter the attendee email.'});
     email(person.email, {message: 'Use a valid email address.'});
