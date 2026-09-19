@@ -1,0 +1,19 @@
+<section class="page">
+  <p class="eyebrow">ONE RENDERER / MODEL + SCHEMA + JSON</p>
+  <h1>A form from a definition.</h1>
+  <p class="lede">The explicit booking remains the teaching example. This small dynamic version uses the same renderer as Describe a form.</p>
+  <p class="notice">This example supports flat string fields: text, email, textarea and select. The JSON defines the controls; the Angular schema defines validation. Values and submissions stay on this device.</p>
+  <div class="columns">
+    <section class="panel">
+      <h2>Three inputs</h2>
+      <pre>{{ usage }}</pre>
+      <details open><summary>UI definition · JSON</summary><pre>{{ definition | json }}</pre></details>
+      <details><summary>Initial model · JSON</summary><pre>{{ initialValues | json }}</pre></details>
+      <p class="muted">The schema is in dynamic-example.ts. It requires name, email, city and topic, and validates email. UI required labels should match that schema. Configuration is fixed for each mounted form; replacing the form creates a fresh draft.</p>
+    </section>
+    <section class="panel">
+      <app-generated-form title="Contact form" [definition]="definition"
+        [initialValues]="initialValues" [validationSchema]="validationSchema" />
+    </section>
+  </div>
+</section>

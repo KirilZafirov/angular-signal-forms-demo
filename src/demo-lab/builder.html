@@ -1,0 +1,48 @@
+<section class="page">
+    <p class="eyebrow">DESCRIPTION → DEFINITION → SIGNAL FORM</p>
+    <h1>Describe it. Try it.</h1>
+    <p class="lede">
+      Turn a short brief into a working form, then inspect the definition and live model.
+    </p>
+    <div class="notice">
+      Offline interpreter, not an AI service. Supports name, email, company, phone, city and notes.
+      Fields are required unless marked optional in their comma-separated phrase. Other requirements
+      are not interpreted.
+    </div>
+    <div class="columns">
+      <section class="panel">
+        <h2>01 / Describe the form</h2>
+        <label for="description">Form description</label
+        ><textarea
+          id="description"
+          rows="6"
+          maxlength="1200"
+          [value]="description()"
+          (input)="description.set($any($event.target).value)"
+        ></textarea>
+        <div class="actions">
+          <button (click)="actions.generate(description())">Build form</button
+          ><button class="secondary" (click)="actions.example(description)">Try another example</button>
+        </div>
+        <p class="muted">Building again replaces the preview and clears its entries.</p>
+        <p role="alert">{{ actions.error() }}</p>
+        <p role="status">{{ actions.status() }}</p>
+        @if (actions.generations().length) {
+          <details open>
+            <summary>02 / Form definition</summary>
+            <pre>{{ actions.generations()[0].definition | json }}</pre>
+          </details>
+        }
+      </section>
+      <section class="panel">
+        @for (generation of actions.generations(); track generation.id) {
+          <app-generated-form [definition]="generation.definition" />
+        } @empty {
+          <h2>03 / Preview</h2>
+          <p class="muted">
+            Your form will appear here. Build it, submit empty, then correct the fields.
+          </p>
+        }
+      </section>
+    </div>
+  </section>

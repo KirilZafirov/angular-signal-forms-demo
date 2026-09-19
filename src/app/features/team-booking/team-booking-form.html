@@ -1,0 +1,96 @@
+<section class="form-area" aria-labelledby="registration-title">
+  <h2 id="registration-title">Team booking</h2>
+  <form novalidate (submit)="actions.save($event)" [attr.aria-busy]="registration().submitting()">
+    <fieldset class="submission-fields" [disabled]="registration().submitting()">
+      <legend class="sr-only">Booking details</legend>
+      <section id="organizer" class="form-section">
+        <h3>01 / Organizer</h3>
+        <app-form-field controlId="organizer-name" label="Organizer name" autocomplete="name"
+          [field]="registration.organizer.name" />
+        <app-form-field controlId="organizer-email" label="Organizer email" type="email" autocomplete="email"
+          [field]="registration.organizer.email" />
+      </section>
+      <section id="attendees" class="form-section">
+        <h3>02 / Attendees</h3>
+        <p class="hint">At least one attendee. Each person keeps a stable identity.</p>
+        @for (attendee of registration.attendees; track attendee; let i = $index) {
+        <fieldset class="attendee">
+          <legend>Attendee {{ i + 1 }}</legend>
+          <app-form-field [controlId]="attendee.id().value() + '-name'" [label]="'Attendee ' + (i + 1) + ' name'"
+            [field]="attendee.name" />
+          <app-form-field [controlId]="attendee.id().value() + '-email'" [label]="'Attendee ' + (i + 1) + ' email'"
+            type="email" [field]="attendee.email" />
+          <app-form-field [controlId]="attendee.id().value() + '-meal'" [label]="'Attendee ' + (i + 1) + ' meal'"
+            type="select" [options]="mealOptions" [field]="attendee.preferences.meal" />
+          <app-form-field [controlId]="attendee.id().value() + '-notes'"
+            [label]="'Attendee ' + (i + 1) + ' accessibility notes (optional)'" type="textarea" [rows]="2"
+            [field]="attendee.preferences.accessibilityNotes" />
+          <button class="secondary" type="button" [disabled]="model().attendees.length === 1"
+            (click)="actions.removeAttendee(attendee.id().value())">
+            Remove attendee {{ i + 1 }}
+          </button>
+        </fieldset>
+        }
+        <button class="secondary" type="button" (click)="actions.addAttendee()">Add attendee</button>
+        <p class="hint" role="status">{{ actions.structureMessage() }}</p>
+      </section>
+      <!-- billing-start -->
+      <section id="billing" class="form-section">
+        <h3>03 / Billing</h3>
+        <label class="checkbox"><input type="checkbox" [formField]="registration.billing.companyInvoice" /> I need a
+          company invoice</label>
+        @if (!registration.billing.company().hidden()) {
+        <div class="company-fields">
+          <app-form-field controlId="company-name" label="Company name" autocomplete="organization"
+            [field]="registration.billing.company.name" />
+          <app-form-field controlId="company-street" label="Street address" autocomplete="street-address"
+            [field]="registration.billing.company.address.street" />
+          <app-form-field controlId="company-city" label="City" autocomplete="address-level2"
+            [field]="registration.billing.company.address.city" />
+          <app-form-field controlId="company-postalCode" label="Postal code" autocomplete="postal-code"
+            [field]="registration.billing.company.address.postalCode" />
+          <app-form-field controlId="company-country" label="Country" autocomplete="country-name"
+            [field]="registration.billing.company.address.country" />
+        </div>
+        <p class="hint">
+          Turning invoicing off keeps this draft and excludes it from the request.
+        </p>
+        }
+      </section>
+      <!-- billing-end -->
+      <button type="submit">
+        {{
+        registration().submitting()
+        ? 'Saving…'
+        : actions.outcome().kind === 'failed'
+        ? 'Retry booking'
+        : 'Book team seats'
+        }}
+      </button>
+    </fieldset>
+    <p class="status" role="status" aria-live="polite" aria-atomic="true">{{ actions.message() }}</p>
+  </form>
+</section>
+<aside aria-label="Demo controls" class="inspector">
+  <div>
+    <h2>Demo controls</h2>
+    <label for="scenario">Next simulated response</label><select id="scenario" [disabled]="registration().submitting()"
+      (change)="actions.setScenario($event)">
+      <option value="success">Confirmed</option>
+      <option value="rejected">Attendee email rejected</option>
+      <option value="offline">Request failed</option>
+    </select>
+    <p>Rejects the second attendee, or the first if only one exists.</p>
+    <p>
+      Requests: {{ actions.api.calls() }} · Invalid: {{ registration().invalid() }} · Submitting:
+      {{ registration().submitting() }}
+    </p>
+  </div>
+  <details>
+    <summary>Inspect nested model and last API payload</summary>
+    <h3>Writable model</h3>
+    <pre>{{ model() | json }}</pre>
+    <h3>Last submitted payload</h3>
+    <pre>{{ actions.api.lastPayload() | json }}</pre>
+  </details>
+</aside>

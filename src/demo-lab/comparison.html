@@ -1,0 +1,45 @@
+<section class="page">
+    <p class="eyebrow">THE SAME BOOKING / TWO FORM MODELS</p>
+    <h1>Before & after.</h1>
+    <p class="lede">
+      Compare a Reactive Forms implementation with the Signal Forms code used in the team booking
+      demo.
+    </p>
+    <div class="topics" aria-label="Comparison topics">
+      @for (topic of topics; track topic.title; let i = $index) {
+        <button class="secondary" [attr.aria-pressed]="selected() === i" (click)="selected.set(i)">
+          {{ topic.title }}
+        </button>
+      }
+    </div>
+    <p class="notice">{{ current().summary }}</p>
+    <div class="columns">
+      <section class="panel">
+        <p class="caption">BEFORE / REACTIVE FORMS</p>
+        <h2>Explicit control tree</h2>
+        <pre>{{ current().before }}</pre>
+      </section>
+      <section class="panel">
+        <p class="caption">AFTER / SIGNAL FORMS</p>
+        <h2>Model + schema + field tree</h2>
+        <pre>{{ current().after }}</pre>
+      </section>
+    </div>
+    <p class="muted">
+      Focused teaching excerpts, not a full migration patch. The compiled Reactive Forms reference
+      is in src/demo-lab/reactive-booking.ts; the complete Signal Forms feature is in src/app/features/team-booking. Both
+      approaches support dynamic forms.
+    </p>
+    <p>
+      <a href="https://angular.dev/guide/forms/reactive-forms" target="_blank" rel="noopener"
+        >Reactive Forms documentation</a
+      >
+      ·
+      <a
+        href="https://angular.dev/guide/forms/signals/dynamic-forms-with-json"
+        target="_blank"
+        rel="noopener"
+        >Dynamic Signal Forms documentation</a
+      >
+    </p>
+  </section>

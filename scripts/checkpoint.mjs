@@ -1,0 +1,11 @@
+import {cp, mkdir} from 'node:fs/promises';
+import {fileURLToPath} from 'node:url';
+import path from 'node:path';
+const root=fileURLToPath(new URL('../',import.meta.url));
+const name=process.argv[2];
+if(!['core','extended'].includes(name))throw Error('Use: npm run checkpoint -- core|extended');
+const backup=path.join(root,'.checkpoint-backups',new Date().toISOString().replaceAll(':','-'));
+await mkdir(backup,{recursive:true});
+await cp(path.join(root,'src/app'),path.join(backup,'app'),{recursive:true});
+await cp(path.join(root,'checkpoints',name,'app'),path.join(root,'src/app'),{recursive:true});
+console.log(`Loaded ${name}. Previous app saved to ${backup}`);

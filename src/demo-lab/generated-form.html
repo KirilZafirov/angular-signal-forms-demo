@@ -1,0 +1,23 @@
+<h2>{{ title() }}</h2>
+    <p class="muted">Live Signal Forms controls · submission stays on this device</p>
+    <form (submit)="actions.save($event, fields, model)" novalidate>
+      @for (item of definition().fields; track item.key) {
+        <app-form-field [controlId]="'generated-' + item.key"
+          [label]="item.label + (item.required ? ' (required)' : ' (optional)')"
+          [type]="item.kind" [options]="item.options ?? []" [field]="fields[item.key]" />
+      }
+      <button type="submit">Submit generated form</button>
+    </form>
+    <p role="status">
+      {{ actions.saved() ? 'Submitted locally. The snapshot below shows the submitted values.' : '' }}
+    </p>
+    <details open>
+      <summary>Live signal model</summary>
+      <pre>{{ model() | json }}</pre>
+    </details>
+    @if (actions.saved()) {
+      <details open>
+        <summary>Submitted snapshot</summary>
+        <pre>{{ actions.saved() | json }}</pre>
+      </details>
+    }

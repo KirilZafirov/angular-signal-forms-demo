@@ -1,0 +1,4 @@
+:host{display:block;max-width:1240px;margin:auto;padding:30px 44px}main{row-gap:25px}@media(max-width:760px){:host{padding:22px}}
+
+/* Bound sticky content to the first grid row, above the inspector. */
+.intro-column{min-width:0}

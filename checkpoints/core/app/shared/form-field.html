@@ -1,0 +1,18 @@
+<label [for]="controlId()">{{ label() }}</label>
+@switch (type()) {
+  @case ('textarea') {
+    <textarea [id]="controlId()" [formField]="field()" [rows]="rows()"
+      [attr.autocomplete]="autocomplete()" [attr.aria-describedby]="errorId()" [attr.aria-invalid]="invalid()"></textarea>
+  }
+  @case ('select') {
+    <select [id]="controlId()" [formField]="field()" [attr.autocomplete]="autocomplete()"
+      [attr.aria-describedby]="errorId()" [attr.aria-invalid]="invalid()">
+      @for (option of options(); track option.value) { <option [value]="option.value">{{ option.label }}</option> }
+    </select>
+  }
+  @default {
+    <input [id]="controlId()" [type]="type()" [formField]="field()" [attr.autocomplete]="autocomplete()"
+      [attr.aria-describedby]="errorId()" [attr.aria-invalid]="invalid()" />
+  }
+}
+<app-field-errors [id]="errorId()" [field]="field()" />
